@@ -1,0 +1,25 @@
+{
+    "name": "barcellano-envoy/parse_multipart_form_put",
+    "description": "PHP library for handling multipart form data for put requests",
+    "keywords": ["put request", "file upload", "multipart form"],
+    "homepage": "https://github.com/barcellano-envoy/parse_multipart_form_put",
+    "authors": [
+        {
+            "name": "James Barcellano",
+            "email": "james@jamesb.biz"
+        }
+    ],
+    "support": {
+        "email": "james@jamesb.biz",
+        "issues": "https://github.com/barcellano-envoy/parse_multipart_form_put/issues"
+    },
+    "require": {
+        "php": ">=5.3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Psr4\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
