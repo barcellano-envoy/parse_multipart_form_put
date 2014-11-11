@@ -21,8 +21,8 @@ class Processer {
         /* PUT data comes in on the stdin stream */
         if($input === null) {
             $input_handler = fopen("php://input", "r");
-        
-        /* Open a file for writing */
+            
+            /* Open a file for writing */
         
             $input = '';
             
@@ -55,6 +55,9 @@ class Processer {
         $a_blocks = preg_split("/-+$boundary/", $input);
         array_pop($a_blocks);
         
+        $file_fields = array();
+        $other_fields = '';
+        
         // loop data blocks
         foreach ($a_blocks as $id => $block) {
             if (empty($block)) {
@@ -69,14 +72,20 @@ class Processer {
                 preg_match("/name=\"([^\"]*)\".*filename=\"([^\"]*)\".*Content-Type: (.*?)[\n\r]+(.*)$/s", $block, $matches);
                 
                 if(isset($matches[4]) && !empty($matches[4])) {
-                    $a_data['files'][] = array('form_name' => $matches[1], 'file_name' => $matches[2], 'content-type' => $matches[3], 'file' => $matches[4]);
+                    $file_fields[] = array('form_name' => $matches[1], 'file_name' => $matches[2], 'content-type' => $matches[3], 'file' => $matches[4]);
                 }
             } else {
                 // parse all other fields
                 // match "name" and optional value in between newline sequences
                 preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
-                $a_data[$matches[1]] = isset($matches[2]) ? $matches[2] : null;
+                $matches[2] = isset($matches[2]) ? $matches[2] : null;
+                $other_fields .= $matches[1].'='.$matches[2].'&';
+                //$a_data[$matches[1]] = ;
             }
+        }
+        parse_str($other_fields, $a_data);
+        if(!empty($file_fields)) {
+            $a_data['files'] = $file_fields;
         }
     }
 }
