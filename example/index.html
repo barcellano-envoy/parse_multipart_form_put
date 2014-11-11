@@ -26,9 +26,9 @@
             request.onload = function(ajax_event) {
                 console.log(ajax_event);
                 if (request.status == 200) {
-                    output.innerHTML = "Success!\n\n"+ajax_event.data;
+                    output.innerHTML = "Success!\n\n"+request.responseText;
                 } else {
-                    output.innerHTML = "Error " + request.status+"\n\n"+ajax_event.data;
+                    output.innerHTML = "Error " + request.status+"\n\n"+request.responseText;
                 }
             };
             

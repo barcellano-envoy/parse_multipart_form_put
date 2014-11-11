@@ -63,15 +63,16 @@ class Processer {
             //$a_data = $block;return;
             if (strpos($block, 'filename="') !== false) {
                 // match "name", then everything after "stream" (optional) except for prepending newlines
-                preg_match("/name=\"([^\"]*)\".*filename=\"([^\"]*)\".*Content-Type: (.*?)[\n]+(.*)$/s", $block, $matches);
-                if(isset($matches[4])) {
-                    $a_data['files'][$matches[2]] = $matches[4];
+                preg_match("/name=\"([^\"]*)\".*filename=\"([^\"]*)\".*Content-Type: (.*?)[\n\r]+(.*)$/s", $block, $matches);
+                
+                if(isset($matches[4]) && !empty($matches[4])) {
+                    $a_data['files'][] = array('form_name' => $matches[1], 'file_name' => $matches[2], 'content-type' => $matches[3], 'file' => $matches[4]);
                 }
             } else {
                 // parse all other fields
                 // match "name" and optional value in between newline sequences
                 preg_match('/name=\"([^\"]*)\"[\n|\r]+([^\n\r].*)?\r$/s', $block, $matches);
-                $a_data[$matches[1]] = $matches[2];
+                $a_data[$matches[1]] = isset($matches[2]) ? $matches[2] : null;
             }
         }
     }
