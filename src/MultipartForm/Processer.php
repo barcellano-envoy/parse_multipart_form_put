@@ -16,13 +16,14 @@ class Processer {
      * @param   array  Empty array to fill with data
      * @return  array  Associative array of request data
      */
-    public static function parse(array &$a_data, &$input = null) {
+    public static function parse(array &$a_data, $input = null) {
         // read incoming data
         /* PUT data comes in on the stdin stream */
-        $input_handler = fopen("php://input", "r");
+        if($input === null) {
+            $input_handler = fopen("php://input", "r");
         
         /* Open a file for writing */
-        if($input === null) {
+        
             $input = '';
             
             /* Read the data 1 KB at a time
