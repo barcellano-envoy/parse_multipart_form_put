@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>PUT Example with Javascript</title>
+    </head>
+<body>
+    <form id="form1">
+        <input type="text" name="test1" placeholder="Test 1" />
+        <input type="text" name="test2" placeholder="Test 2" />
+        <input type="file" name="file1" />
+        <input type="submit" />
+    </form>
+    <textarea style="margin-top: 20px; height: 400px; width: 800px;" id="output"></textarea>
+    
+    <script type="text/javascript">
+        var the_form = document.getElementById('form1');
+        the_form.addEventListener('submit',function(ev) {
+            console.log(the_form);
+            var 
+                output = document.getElementById("output"),
+                the_form_data = new FormData(the_form),
+                request = new XMLHttpRequest();
+            
+            request.open("PUT", "put_to_me.php");
+            request.onload = function(ajax_event) {
+                console.log(ajax_event);
+                if (request.status == 200) {
+                    output.innerHTML = "Success!\n\n"+ajax_event.data;
+                } else {
+                    output.innerHTML = "Error " + request.status+"\n\n"+ajax_event.data;
+                }
+            };
+            
+            request.send(the_form_data);
+            ev.preventDefault();
+            
+        }, false);
+    </script>
+</body>
+</html>

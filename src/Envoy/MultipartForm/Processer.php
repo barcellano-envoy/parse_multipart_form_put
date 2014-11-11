@@ -26,12 +26,16 @@ class Processer {
         
         /* Read the data 1 KB at a time
            and write to the file */
-        while ($data = fread($putdata, 1024)) {
+        while ($data = fread($input_handler, 1024)) {
           $input .= $data;
         }
         
         /* Close the streams */
         fclose($input_handler);
+        
+        if(!isset($_SERVER['CONTENT_TYPE'])) {
+            return $a_data;
+        }
         
         // grab multipart boundary from content type header
         preg_match('/boundary=(.*)$/', $_SERVER['CONTENT_TYPE'], $matches);
@@ -56,10 +60,13 @@ class Processer {
             
             // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visibile char
             // parse uploaded files
-            if (strpos($block, 'application/octet-stream') !== false) {
+            //$a_data = $block;return;
+            if (strpos($block, 'filename="') !== false) {
                 // match "name", then everything after "stream" (optional) except for prepending newlines
-                preg_match("/name=\"([^\"]*)\".*stream[\n|\r]+([^\n\r].*)?$/s", $block, $matches);
-                $a_data['files'][$matches[1]] = $matches[2];
+                preg_match("/name=\"([^\"]*)\".*filename=\"([^\"]*)\".*Content-Type: (.*?)[\n]+(.*)$/s", $block, $matches);
+                if(isset($matches[4])) {
+                    $a_data['files'][$matches[2]] = $matches[4];
+                }
             } else {
                 // parse all other fields
                 // match "name" and optional value in between newline sequences
